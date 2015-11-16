@@ -15,11 +15,12 @@ public class MovieRatingSummarySerializer {
     public static final Joiner JOINER = Joiner.on(FIRST_SEPARATOR);
 
     public static String serialize(MovieRatingSummary movieRatingSummary) {
+        List<String> elements = Lists.newArrayList();
+        elements.add(String.valueOf(movieRatingSummary.getItemID()));
         Multiset<String> ratingCounts = movieRatingSummary.getRatingCounts();
-        List<String> ratingCountString = Lists.newArrayList();
-        for (String rating : ratingCounts) {
-            ratingCountString.add(rating + SECOND_SEPARATOR + ratingCounts.count(rating));
+        for (String rating : ratingCounts.elementSet()) {
+            elements.add(rating + SECOND_SEPARATOR + ratingCounts.count(rating));
         }
-        return JOINER.join(ratingCounts);
+        return JOINER.join(elements);
     }
 }
