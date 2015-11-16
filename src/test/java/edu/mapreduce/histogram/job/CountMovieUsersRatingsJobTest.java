@@ -1,7 +1,6 @@
 package edu.mapreduce.histogram.job;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class CountMovieUsersRatingsJobTest {
     }
 
     private List<Pair<LongWritable, List<Text>>> createReducerInput() {
-        ArrayList<Pair<LongWritable, List<Text>>> inputs = Lists.newArrayList();
+        List<Pair<LongWritable, List<Text>>> inputs = Lists.newArrayList();
         inputs.add(new Pair<LongWritable, List<Text>>(new LongWritable(1), Arrays.asList(new Text("100\u00013"),
                                                                                          new Text("101\u00012"))));
         inputs.add(new Pair<LongWritable, List<Text>>(new LongWritable(2), Arrays.asList(new Text("102\u00011"))));

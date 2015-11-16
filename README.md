@@ -8,4 +8,5 @@ For running the job:
 ```
 hadoop jar item-based-similarity-jar-with-dependencies.jar edu.mapreduce.histogram.job.CountMovieUsersRatingsJob <input> <output>
 ```
+Provides Job unit tests using MRunit.
 
