@@ -1,6 +1,6 @@
 package edu.mapreduce.formats.job;
 
-import edu.mapreduce.formats.UserMovieRating;
+import edu.mapreduce.formats.MovieRating;
 import edu.mapreduce.formats.UserRatingsSummary;
 
 import java.io.IOException;
@@ -33,7 +33,6 @@ import org.apache.hadoop.util.ToolRunner;
  *    A json object for each user containing all his/her the movie ratings.
  *
  * Example:
- *
  *       {"userId": 1000, "movieRatings": {"10": 4, "21":1}}
  *       {"userId": 1010, "movieRatings": {"21":3}}
  *
@@ -60,12 +59,12 @@ public class UserMoviesRatingJob extends Configured implements Tool {
         // Specify key / value
         job.setMapOutputKeyClass(LongWritable.class);
         job.setOutputKeyClass(LongWritable.class);
-        job.setMapOutputValueClass(UserMovieRatingWritable.class);
+        job.setMapOutputValueClass(MovieRatingWritable.class);
         job.setOutputValueClass(UserRatingsSummaryWritable.class);
 
         // Input
         FileInputFormat.addInputPath(job, new Path(args[0]));
-        job.setInputFormatClass(UserMovieRatingInputFormat.class);
+        job.setInputFormatClass(MovieRatingInputFormat.class);
 
         // Output
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
@@ -79,13 +78,13 @@ public class UserMoviesRatingJob extends Configured implements Tool {
      * Aggregates the user move ratings per user.
      */
     public static class UserMovieRatingsMapper extends
-            Mapper<LongWritable, UserMovieRatingWritable, LongWritable, UserMovieRatingWritable> {
+            Mapper<LongWritable, MovieRatingWritable, LongWritable, MovieRatingWritable> {
 
         @Override
-        protected void map(LongWritable key, UserMovieRatingWritable value, Context context)
+        protected void map(LongWritable key, MovieRatingWritable value, Context context)
                 throws IOException, InterruptedException {
-            UserMovieRating userMovieRating = value.get();
-            context.write(new LongWritable(userMovieRating.getUserId()), value);
+            MovieRating movieRating = value.get();
+            context.write(new LongWritable(movieRating.getUserId()), value);
         }
     }
 
@@ -94,16 +93,16 @@ public class UserMoviesRatingJob extends Configured implements Tool {
      */
     public static class UserMovieRatingsReducer
             extends
-            Reducer<LongWritable, UserMovieRatingWritable, LongWritable, UserRatingsSummaryWritable> {
+            Reducer<LongWritable, MovieRatingWritable, LongWritable, UserRatingsSummaryWritable> {
 
         @Override
         protected void reduce(LongWritable key,
-                              Iterable<UserMovieRatingWritable> values,
+                              Iterable<MovieRatingWritable> values,
                               Context context) throws IOException, InterruptedException {
             UserRatingsSummary summary = new UserRatingsSummary(key.get());
-            for (UserMovieRatingWritable value : values) {
-                UserMovieRating userMovieRating = value.get();
-                summary.addRating(userMovieRating.getMovieId(), userMovieRating.getRating());
+            for (MovieRatingWritable value : values) {
+                MovieRating movieRating = value.get();
+                summary.addRating(movieRating.getMovieId(), movieRating.getRating());
             }
             context.write(key, new UserRatingsSummaryWritable(summary));
         }

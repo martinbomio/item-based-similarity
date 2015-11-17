@@ -1,14 +1,16 @@
 package edu.mapreduce.formats.job;
 
-import edu.mapreduce.formats.UserMovieRating;
+import edu.mapreduce.formats.MovieRating;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -17,23 +19,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Input format for reading user movie ratings form MovieLens one line at a time.
+ * Input format for reading user movie ratings form MovieLens one line at a
+ * time.
  */
-public class UserMovieRatingInputFormat extends
-        FileInputFormat<LongWritable, UserMovieRatingWritable> {
-    private static final Logger logger = LoggerFactory.getLogger(UserMovieRatingInputFormat.class);
+public class MovieRatingInputFormat extends FileInputFormat<LongWritable, MovieRatingWritable> {
+    private static final Logger logger = LoggerFactory.getLogger(MovieRatingInputFormat.class);
 
     @Override
-    public RecordReader<LongWritable, UserMovieRatingWritable> createRecordReader(InputSplit inputSplit,
-                                                                                  TaskAttemptContext taskAttemptContext)
+    public RecordReader<LongWritable, MovieRatingWritable> createRecordReader(InputSplit inputSplit,
+                                                                              TaskAttemptContext taskAttemptContext)
             throws IOException, InterruptedException {
         return new UserMovieRatingRecordReader();
     }
 
+    @Override
+    protected boolean isSplitable(JobContext context, Path filename) {
+        return true;
+    }
+
     public static class UserMovieRatingRecordReader extends
-            RecordReader<LongWritable, UserMovieRatingWritable> {
+            RecordReader<LongWritable, MovieRatingWritable> {
         BufferedReader reader;
-        UserMovieRating current;
+        MovieRating current;
         long fileLength = 0;
         long bytesRead = 0;
 
@@ -52,7 +59,7 @@ public class UserMovieRatingInputFormat extends
         public boolean nextKeyValue() throws IOException, InterruptedException {
             String line = this.reader.readLine();
             if (line != null) {
-                current = new UserMovieRating(line);
+                current = new MovieRating(line);
                 bytesRead += line.getBytes().length;
             }
             return line != null;
@@ -64,8 +71,8 @@ public class UserMovieRatingInputFormat extends
         }
 
         @Override
-        public UserMovieRatingWritable getCurrentValue() throws IOException, InterruptedException {
-            return new UserMovieRatingWritable(current);
+        public MovieRatingWritable getCurrentValue() throws IOException, InterruptedException {
+            return new MovieRatingWritable(current);
         }
 
         @Override

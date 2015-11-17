@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
  * Represents a line in the MoveLens user data file. Each object contains the
  * rating a user has given to a movie at a given time.
  */
-public class UserMovieRating implements Serializable {
+public class MovieRating implements Serializable {
     private long userId;
     private long movieId;
     private int rating;
     private long timestamp;
 
-    public UserMovieRating(String line) {
+    public MovieRating(String line) {
         String[] split = StringUtils.split(line, "\t");
         userId = Long.valueOf(split[0]);
         movieId = Long.valueOf(split[1]);
@@ -57,9 +57,9 @@ public class UserMovieRating implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserMovieRating)) return false;
+        if (!(o instanceof MovieRating)) return false;
 
-        UserMovieRating that = (UserMovieRating) o;
+        MovieRating that = (MovieRating) o;
 
         if (movieId != that.movieId) return false;
         if (rating != that.rating) return false;
