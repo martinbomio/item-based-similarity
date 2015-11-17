@@ -39,4 +39,25 @@ public class UserRatingsSummary implements Serializable {
     public void setMoveRatings(Map<Long, Long> moveRatings) {
         this.moveRatings = moveRatings;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserRatingsSummary)) return false;
+
+        UserRatingsSummary that = (UserRatingsSummary) o;
+
+        if (userId != that.userId) return false;
+        if (moveRatings != null ? !moveRatings.equals(that.moveRatings) : that.moveRatings != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (userId ^ (userId >>> 32));
+        result = 31 * result + (moveRatings != null ? moveRatings.hashCode() : 0);
+        return result;
+    }
 }

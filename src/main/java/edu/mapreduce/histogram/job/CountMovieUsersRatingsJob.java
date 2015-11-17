@@ -23,6 +23,21 @@ import org.apache.hadoop.util.ToolRunner;
 
 /**
  * Simple hadoop job for creating movie rating histogram.
+ * Input: (tab separated)
+ *     userID    movieID    rating    timestamp
+ *
+ * Example:
+ *       1000       10         4       10000000
+ *       1010       21         3       10120120
+ *       1000       21         1       21312310
+ *
+ * Output:
+ *      movieID\u0001rating1\u0002ratingCount1\u0001rating2\u0002ratingCount2
+ *
+ * Example:
+ *      10\u00014\u00021
+ *      21\u00013\u00021\u00011\u00021
+ *
  */
 public class CountMovieUsersRatingsJob extends Configured implements Tool {
     private static final String MAPPER_SEPARATOR = "\u0001";

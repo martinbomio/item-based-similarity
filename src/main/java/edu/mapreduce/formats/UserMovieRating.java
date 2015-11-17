@@ -53,4 +53,28 @@ public class UserMovieRating implements Serializable {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserMovieRating)) return false;
+
+        UserMovieRating that = (UserMovieRating) o;
+
+        if (movieId != that.movieId) return false;
+        if (rating != that.rating) return false;
+        if (timestamp != that.timestamp) return false;
+        if (userId != that.userId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (userId ^ (userId >>> 32));
+        result = 31 * result + (int) (movieId ^ (movieId >>> 32));
+        result = 31 * result + rating;
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        return result;
+    }
 }

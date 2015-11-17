@@ -20,6 +20,23 @@ import org.apache.hadoop.util.ToolRunner;
 /**
  * Creates a summary of the movies that the user rated using custom input/output
  * formats.
+ *
+ * Input: (tab separated)
+ *     userID    movieID    rating    timestamp
+ *
+ * Example:
+ *       1000       10         4       10000000
+ *       1010       21         3       10120120
+ *       1000       21         1       21312310
+ *
+ * Output:
+ *    A json object for each user containing all his/her the movie ratings.
+ *
+ * Example:
+ *
+ *       {"userId": 1000, "movieRatings": {"10": 4, "21":1}}
+ *       {"userId": 1010, "movieRatings": {"21":3}}
+ *
  */
 public class UserMoviesRatingJob extends Configured implements Tool {
 
