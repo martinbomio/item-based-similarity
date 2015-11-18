@@ -58,8 +58,8 @@ public class UserMoviesRatingJob extends Configured implements Tool {
 
         // Specify key / value
         job.setMapOutputKeyClass(LongWritable.class);
-        job.setOutputKeyClass(LongWritable.class);
         job.setMapOutputValueClass(MovieRatingWritable.class);
+        job.setOutputKeyClass(LongWritable.class);
         job.setOutputValueClass(UserRatingsSummaryWritable.class);
 
         // Input
@@ -99,6 +99,7 @@ public class UserMoviesRatingJob extends Configured implements Tool {
         protected void reduce(LongWritable key,
                               Iterable<MovieRatingWritable> values,
                               Context context) throws IOException, InterruptedException {
+            context.getCounter("MovieLens", "Users").increment(1L);
             UserRatingsSummary summary = new UserRatingsSummary(key.get());
             for (MovieRatingWritable value : values) {
                 MovieRating movieRating = value.get();
